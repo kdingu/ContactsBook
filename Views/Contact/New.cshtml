@@ -1,0 +1,52 @@
+﻿@model ContactsBook.ViewModels.ContactViewModel
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="max-width: 35rem; margin: auto; margin-top: 4rem;">
+    @using (Html.BeginForm("Save", "Contact"))
+    {
+        <h4 class="text-center">New Contact</h4>
+        <hr />
+        <div class="form-group">
+            @Html.LabelFor(m => m.Contact.FirstName, new { @class = "col-form-label" })
+            @Html.TextBoxFor(m => m.Contact.FirstName, new { @class = "form-control", placeholder = "Enter first name" })
+            @Html.ValidationMessageFor(m => m.Contact.FirstName)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Contact.LastName, new { @class = "col-form-label" })
+            @Html.TextBoxFor(m => m.Contact.LastName, new { @class = "form-control", placeholder = "Enter last name" })
+            @Html.ValidationMessageFor(m => m.Contact.LastName)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email.EmailAddress, new { @class = "col-form-label" })
+            @Html.TextBoxFor(m => m.Email.EmailAddress, new { @class = "form-control", placeholder = "Enter email address" })
+            @Html.ValidationMessageFor(m => m.Email.EmailAddress)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Address.ContactAddress, new { @class = "col-form-label" })
+            @Html.TextBoxFor(m => m.Address.ContactAddress, new { @class = "form-control", placeholder = "Enter address" })
+            @Html.ValidationMessageFor(m => m.Address.ContactAddress)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Phone.PhoneNumber, new { @class = "col-form-label" })
+            @Html.TextBoxFor(m => m.Phone.PhoneNumber, new { @class = "form-control", placeholder = "Enter phone number" })
+            @Html.ValidationMessageFor(m => m.Phone.PhoneNumber)
+        </div>
+
+        @Html.HiddenFor(m => m.Contact.Id)
+        @Html.AntiForgeryToken()
+
+        <hr />
+        <button type="submit" class="btn btn-outline-success" style="width: 10rem;">Save</button>
+        @Html.ActionLink("Back", "Contacts", "Book", null, new { @class = "btn btn-outline-secondary" })
+    }
+</div>
+
+@section scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+}
+

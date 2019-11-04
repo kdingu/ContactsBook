@@ -1,0 +1,31 @@
+﻿@model ContactsBook.ViewModels.UserViewModel
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+    <div style="max-width: 35rem; margin: auto; margin-top: 4rem;">
+        @using (Html.BeginForm("Update", "User"))
+        {
+            <h4 class="text-center">@Model.User.UserName</h4>
+            <hr />
+            <div class="form-group">
+                @Html.Label("Actual Role")
+                @Html.TextBoxFor(m => m.Roless.Single(r => r.Id == Model.User.Roles.FirstOrDefault().RoleId).Name, new { disabled = "disabled", @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.Label("New Role")
+                @Html.DropDownListFor(m => m.selectedRoleId, new SelectList(Model.Roless, "Id", "Name", Model.User.Roles.SingleOrDefault().RoleId), null, new { @class = "form-control" })
+            </div>
+            <div>
+
+            </div>
+            @Html.HiddenFor(m => m.User.Id)
+
+            <hr />
+            <button type="submit" class="btn btn-outline-success" style="width: 10rem;">Save</button>
+            @Html.ActionLink("Back", "Users", "Book", null, new { @class = "btn btn-outline-secondary" })
+            @Html.ActionLink("Delete", "Delete", "User", new { Model.User.Id }, new { style = "float: right;", @class = "btn btn-outline-danger", onClick = "return confirm('Are you sure you wish to delete this user?');" })
+        }
+    </div>

@@ -1,0 +1,67 @@
+﻿@model ContactsBook.ViewModels.ContactViewModel
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Model.Id = Model.Contact.Id;
+}
+    <div style="max-width: 35rem; margin: auto; margin-top: 4rem;">
+        @using (Html.BeginForm("Update", "Contact"))
+        {
+            <h4 class="text-center">@Model.Contact.FirstName @Model.Contact.LastName</h4>
+            <hr />
+            <div class="form-group">
+                @Html.LabelFor(m => m.Contact.FirstName, new { @class = "col-form-label" })
+                @Html.TextBoxFor(m => m.Contact.FirstName, new { @class = "form-control form-control-mg-top-5 form-control-mg-bot-5", placeholder = "Should not leave this field empty" })
+                @Html.ValidationMessageFor(m => m.Contact.FirstName)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Contact.LastName, new { @class = "col-form-label" })
+                @Html.TextBoxFor(m => m.Contact.LastName, new { @class = "form-control form-control-mg-top-5 form-control-mg-bot-5", placeholder = "Should not leave this field empty" })
+                @Html.ValidationMessageFor(m => m.Contact.LastName)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Emails[0].EmailAddress, new { @class = "col-form-label" })
+                @for (int i = 0; i < Model.Emails.Count; i++)
+                {
+                    @Html.HiddenFor(m => m.Emails[i].Id)
+                    @Html.TextBoxFor(m => m.Emails[i].EmailAddress, new { @class = "form-control form-control-mg-top-5 form-control-mg-bot-5", placeholder = "Should not leave this field empty" })
+                    @Html.ValidationMessageFor(m => m.Emails[i].EmailAddress)
+                }
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Phones[0].PhoneNumber, new { @class = "col-form-label" })
+                @for (int i = 0; i < Model.Phones.Count; i++)
+                {
+                    @Html.HiddenFor(m => m.Phones[i].Id)
+                    @Html.TextBoxFor(m => m.Phones[i].PhoneNumber, new { @class = "form-control form-control-mg-top-5 form-control-mg-bot-5", placeholder = "Should not leave this field empty" })
+                    @Html.ValidationMessageFor(m => m.Phones[i].PhoneNumber)
+                }
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Addresses[0].ContactAddress, new { @class = "col-form-label" })
+                @for (int i = 0; i < Model.Addresses.Count; i++)
+                {
+                    @Html.HiddenFor(m => m.Addresses[i].Id)
+                    @Html.TextBoxFor(m => m.Addresses[i].ContactAddress, new { @class = "form-control form-control-mg-top-5 form-control-mg-bot-5", placeholder = "Should not leave this field empty" })
+                    @Html.ValidationMessageFor(m => m.Addresses[i].ContactAddress)
+                }
+            </div>
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(h => h.Contact.Id)
+
+            <hr />
+            <button type="submit" class="btn btn-outline-success" style="width: 10rem;">Save</button>
+            @Html.ActionLink("Back", "Contacts", "Book", null, new { @class = "btn btn-outline-secondary" })
+            @Html.ActionLink("Delete", "Delete", "Contact", new { Model.Contact.Id }, new { style = "float: right;", @class = "btn btn-outline-danger", onClick = "return confirm('Are you sure ?')" })
+
+        }
+    </div>
+
+@section scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+}

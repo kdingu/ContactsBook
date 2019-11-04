@@ -1,0 +1,104 @@
+﻿@model ContactsBook.ViewModels.AllContactsViewModel
+@{
+    ViewBag.Title = "Contacts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Model.Id = 987;
+}
+<br />
+<table class="table table-hover" id="contacts">
+    <thead class="table-active">
+        <tr>
+            <td><strong>First name</strong></td>
+            <td><strong>Last name</strong></td>
+            <td class="text-center"><strong>Email</strong></td>
+            <td class="text-center"><strong>Phone</strong></td>
+            <td class="text-center"><strong>Address</strong></td>
+            <td class="text-center"><strong>Details</strong></td>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @{
+            foreach (var item in Model.Contacts)
+            {
+                    <tr>
+                        <td>@item.FirstName</td>
+                        <td>@item.LastName</td>
+                        <td>
+                            @{
+                                // check if list is empty
+                                if (Model.Emails.Where(e => e.ContactId == item.Id).Any())
+                                {
+                                    var emails = Model.Emails.Where(e => e.ContactId == item.Id);
+                                    for (int i = 0; i < emails.Count(); i++)
+                                    {
+                                        @Html.DisplayTextFor(e => emails.ElementAt(i).EmailAddress)<br />
+                                    }
+                                }
+                                else
+                                {
+                                    <text>No email registered</text>
+                                }
+
+                            }
+                        </td>
+                        <td>
+                            @{
+                                if (Model.Phones.Where(p => p.ContactId == item.Id).Any())
+                                {
+                                    var phones = Model.Phones.Where(p => p.ContactId == item.Id);
+                                    for (int i = 0; i < phones.Count(); i++)
+                                    {
+                                        @Html.DisplayTextFor(p => phones.ElementAt(i).PhoneNumber)
+                                    }
+                                }
+                                else
+                                {
+                                    <text>No phone number registered</text>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @{
+                                if (Model.Addresses.Where(a => a.ContactId == item.Id).Any())
+                                {
+                                    var addresses = Model.Addresses.Where(a => a.ContactId == item.Id);
+                                    for (int i = 0; i < addresses.Count(); i++)
+                                    {
+                                        @Html.DisplayTextFor(a => addresses.ElementAt(i).ContactAddress)
+                                    }
+                                }
+                                else
+                                {
+                                    <text>No address registered</text>
+                                }
+                            }
+                        </td>
+                        <td class="text-center">@Html.ActionLink("Edit", "Details", "Contact", new { @item.Id }, new { @style = "text-decoration: none;", @class = "btn-link" })</td>
+                    </tr>
+
+
+
+            }
+        }
+    </tbody>
+</table>
+<div style="margin-top: 3rem; margin-bottom: 3rem;">
+    @Html.ActionLink("Add a new contact", "New", "Contact", null, new { @class = "btn btn-outline-success" })
+    <button id="downloadCsvButton" class="btn btn-outline-light">Download CSV file</button>
+</div>
+
+@section scripts{
+
+    @* Download CSV script *@
+    <script src="~/Scripts/JavaScript.js"></script>
+
+    @* Pagination, Sorting and Filtering to table *@
+    <script>
+        $(document).ready(function () {
+            $("#contacts").DataTable();
+        });
+    </script>
+
+}

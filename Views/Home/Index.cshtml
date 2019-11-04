@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<div class="row" style="margin-top: 17rem;">
+    <div class="col card border-success" style="max-width: 30rem; margin: 10px auto;">
+        <div class="card-header">Already have an account ?</div>
+        <div class="card-body">
+            <p class="card-text">Welcome back !</p>
+            @Html.ActionLink("Login", "Login", "Account", null, new { @class = "btn btn-outline-success" })
+        </div>
+    </div>
+    <div class="col card border-warning" style="max-width: 30rem; margin: 10px auto;">
+        <div class="card-header">Get more privilages</div>
+        <div class="card-body">
+            <div class="card-text">
+                <p>If you access Contacts Book with a registered account you can import a CSV document of the list so can store it in your device.</p>
+                @Html.ActionLink("Register", "Register", "Account", null, new { @class = "btn btn-warning" })
+            </div>
+        </div>
+    </div>
+</div>
