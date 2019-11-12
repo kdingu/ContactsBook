@@ -1,0 +1,29 @@
+﻿@model ContactsBook.ViewModels.ContactViewModel
+@{
+    ViewBag.Title = "NewPhone";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div style="max-width: 35rem; margin: auto; margin-top: 4rem;">
+    @using (Html.BeginForm("SaveNewPhone", "Contact"))
+    {
+        <h4 class="text-center">Add new phone for: @Model.Contact.FirstName @Model.Contact.LastName</h4>
+        <hr />
+        <div class="form-group">
+            @Html.LabelFor(m => m.Phone.PhoneNumber, new { @class = "col-form-label" })
+            @Html.TextBoxFor(m => m.Phone.PhoneNumber, new { @class = "form-control form-control-mg-top-5 form-control-mg-bot-5", placeholder = "Should not leave this field empty" })
+            @Html.ValidationMessageFor(m => m.Phone.PhoneNumber)
+        </div>
+        <hr />
+        @Html.HiddenFor(m => m.Contact.Id)
+        @Html.HiddenFor(m => m.Contact.FirstName)
+        @Html.HiddenFor(m => m.Contact.LastName)
+        <button type="submit" class="btn btn-outline-success">Save</button>
+        @Html.ActionLink("Cancel", "Details", "Contact", new { Model.Contact.Id }, new { @class = "btn btn-outline-secondary" })
+    }
+</div>
+
+@section Scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+}

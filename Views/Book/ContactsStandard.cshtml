@@ -25,55 +25,35 @@
                     <td>@item.LastName</td>
                     <td>
                         @{
-                            // check if list is empty
-                            if (Model.Emails.Where(e => e.ContactId == item.Id).Any())
-                            {
-                                var emails = Model.Emails.Where(e => e.ContactId == item.Id);
-                                for (int i = 0; i < emails.Count(); i++)
+                            var emails = Model.Emails.Where(e => e.ContactId == item.Id);
+                            <ul>
+                                @for (int i = 0; i < emails.Count(); i++)
                                 {
-                                    <span class="">@Html.DisplayTextFor(e => emails.ElementAt(i).EmailAddress)</span>
-                                    <br />
+                                    <li style="list-style: none;">@Html.DisplayTextFor(e => emails.ElementAt(i).EmailAddress)</li>
                                 }
-                            }
-                            else
-                            {
-                                <text>No email registered</text>
-                            }
-
+                            </ul>
                         }
                     </td>
                     <td>
                         @{
-                            if (Model.Phones.Where(p => p.ContactId == item.Id).Any())
-                            {
-                                var phones = Model.Phones.Where(p => p.ContactId == item.Id);
-                                for (int i = 0; i < phones.Count(); i++)
+                            var phones = Model.Phones.Where(p => p.ContactId == item.Id);
+                            <ul>
+                                @for (int i = 0; i < phones.Count(); i++)
                                 {
-                                    @Html.DisplayTextFor(p => phones.ElementAt(i).PhoneNumber)
-                                    <br />
+                                    <li>@Html.DisplayTextFor(p => phones.ElementAt(i).PhoneNumber)</li>
                                 }
-                            }
-                            else
-                            {
-                                <text>No phone number registered</text>
-                            }
+                            </ul>
                         }
                     </td>
                     <td>
                         @{
-                            if (Model.Addresses.Where(a => a.ContactId == item.Id).Any())
-                            {
-                                var addresses = Model.Addresses.Where(a => a.ContactId == item.Id);
-                                for (int i = 0; i < addresses.Count(); i++)
+                            var addresses = Model.Addresses.Where(a => a.ContactId == item.Id);
+                            <ul>
+                                @for (int i = 0; i < addresses.Count(); i++)
                                 {
-                                    @Html.DisplayTextFor(a => addresses.ElementAt(i).ContactAddress)
-                                    <br />
+                                    <li>@Html.DisplayTextFor(a => addresses.ElementAt(i).ContactAddress)</li>
                                 }
-                            }
-                            else
-                            {
-                                <text>No address registered</text>
-                            }
+                            </ul>
                         }
                     </td>
                 </tr>

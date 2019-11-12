@@ -14,11 +14,13 @@ namespace ContactsBook.Models
         [Display(Name = "First Name")]
         [StringLength(255)]
         [Required]
+        [RegularExpression("^[a-zA-Z\\s]*$", ErrorMessage = "No numbers are allowed in this field.")]
         public string FirstName { get; set; }
 
         [Display(Name = "Last Name")]
         [StringLength(255)]
         [Required]
+        [RegularExpression("^[a-zA-Z\\s]*$", ErrorMessage = "No numbers are allowed in this field.")]
         public string LastName { get; set; }
     }
 }

@@ -2,10 +2,9 @@
 @{
     ViewBag.Title = "Contacts";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    Model.Id = 987;
 }
 <br />
-<table class="table table-hover" id="contacts">
+<table class="table table-hover" style="display: none; width: 100%;" id="contacts">
     <thead class="table-active">
         <tr>
             <td><strong>First name</strong></td>
@@ -18,75 +17,63 @@
     </thead>
 
     <tbody>
-
         @{
             foreach (var item in Model.Contacts)
             {
-                    <tr>
-                        <td>@item.FirstName</td>
-                        <td>@item.LastName</td>
-                        <td>
-                            @{
-                                // check if list is empty
-                                if (Model.Emails.Where(e => e.ContactId == item.Id).Any())
+                <tr>
+                    <td>@item.FirstName</td>
+                    <td>@item.LastName</td>
+                    <td>
+                        @{
+                            var emails = Model.Emails.Where(e => e.ContactId == item.Id);
+                            <ul>
+                                @for (int i = 0; i < emails.Count(); i++)
                                 {
-                                    var emails = Model.Emails.Where(e => e.ContactId == item.Id);
-                                    for (int i = 0; i < emails.Count(); i++)
-                                    {
-                                        @Html.DisplayTextFor(e => emails.ElementAt(i).EmailAddress)<br />
-                                    }
+                                    <li style="list-style: none;">@Html.DisplayTextFor(e => emails.ElementAt(i).EmailAddress)</li>
                                 }
-                                else
+                            </ul>
+                        }
+                    </td>
+                    <td>
+                        @{
+                            var phones = Model.Phones.Where(p => p.ContactId == item.Id);
+                            <ul>
+                                @for (int i = 0; i < phones.Count(); i++)
                                 {
-                                    <text>No email registered</text>
+                                    <li style="list-style: none;">@Html.DisplayTextFor(p => phones.ElementAt(i).PhoneNumber)</li>
                                 }
-
-                            }
-                        </td>
-                        <td>
-                            @{
-                                if (Model.Phones.Where(p => p.ContactId == item.Id).Any())
+                            </ul>
+                        }
+                    </td>
+                    <td>
+                        @{
+                            var addresses = Model.Addresses.Where(a => a.ContactId == item.Id);
+                            <ul>
+                                @for (int i = 0; i < addresses.Count(); i++)
                                 {
-                                    var phones = Model.Phones.Where(p => p.ContactId == item.Id);
-                                    for (int i = 0; i < phones.Count(); i++)
-                                    {
-                                        @Html.DisplayTextFor(p => phones.ElementAt(i).PhoneNumber)
-                                    }
+                                    <li style="list-style: none;">@Html.DisplayTextFor(a => addresses.ElementAt(i).ContactAddress)</li>
                                 }
-                                else
-                                {
-                                    <text>No phone number registered</text>
-                                }
-                            }
-                        </td>
-                        <td>
-                            @{
-                                if (Model.Addresses.Where(a => a.ContactId == item.Id).Any())
-                                {
-                                    var addresses = Model.Addresses.Where(a => a.ContactId == item.Id);
-                                    for (int i = 0; i < addresses.Count(); i++)
-                                    {
-                                        @Html.DisplayTextFor(a => addresses.ElementAt(i).ContactAddress)
-                                    }
-                                }
-                                else
-                                {
-                                    <text>No address registered</text>
-                                }
-                            }
-                        </td>
-                        <td class="text-center">@Html.ActionLink("Edit", "Details", "Contact", new { @item.Id }, new { @style = "text-decoration: none;", @class = "btn-link" })</td>
-                    </tr>
-
-
-
+                            </ul>
+                        }
+                    </td>
+                    <td class="text-center">@Html.ActionLink("Edit", "Details", "Contact", new { @item.Id }, new { @style = "text-decoration: none;", @class = "btn-link" })</td>
+                </tr>
             }
         }
     </tbody>
 </table>
-<div style="margin-top: 3rem; margin-bottom: 3rem;">
-    @Html.ActionLink("Add a new contact", "New", "Contact", null, new { @class = "btn btn-outline-success" })
-    <button id="downloadCsvButton" class="btn btn-outline-light">Download CSV file</button>
+<div class="row" style="margin-top: 3rem; margin-bottom: 3rem;">
+    <div class="col-md-6">
+        @Html.ActionLink("Add a new contact", "New", "Contact", null, new { @class = "btn btn-outline-success" })
+        <button id="downloadCsvButton" class="btn btn-outline-light">Download CSV file</button>
+    </div>
+    <div class="col-md-6 text-right">
+        @using (Html.BeginForm("UploadCsv", "Contact", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input type="file" id="dataFile" name="upload" />
+            <input type="submit" value="Upload CSV" class="btn btn-outline-light" />
+        }
+    </div>
 </div>
 
 @section scripts{
@@ -95,9 +82,10 @@
     <script src="~/Scripts/JavaScript.js"></script>
 
     @* Pagination, Sorting and Filtering to table *@
-    <script>
+    <script type="text/javascript">
         $(document).ready(function () {
             $("#contacts").DataTable();
+            $("#contacts").show();
         });
     </script>
 

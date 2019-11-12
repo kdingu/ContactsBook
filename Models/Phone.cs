@@ -14,6 +14,7 @@ namespace ContactsBook.Models
         [Display(Name = "Phone Number")]
         [StringLength(255)]
         [Required]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Only numbers are allowed in this field.")]
         public string PhoneNumber { get; set; }
 
         public Contact Contact { get; set; }

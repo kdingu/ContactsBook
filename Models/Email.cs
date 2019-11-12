@@ -14,6 +14,7 @@ namespace ContactsBook.Models
         [Display(Name = "Email Address")]
         [StringLength(255)]
         [Required]
+        [RegularExpression("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", ErrorMessage = "Must be a valid email format.")]
         public string EmailAddress { get; set; }
 
         public Contact Contact { get; set; }

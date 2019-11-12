@@ -1,11 +1,13 @@
-﻿using ContactsBook.Models;
+﻿using LumenWorks.Framework.IO.Csv;
+using ContactsBook.Models;
 using ContactsBook.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
+using System.IO;
+using System.Data;
 
 namespace ContactsBook.Controllers
 {
@@ -191,6 +193,206 @@ namespace ContactsBook.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("Contacts", "Book");
+        }
+
+
+        // email form to add new email for a contact
+        public ActionResult NewEmail(int id)
+        {
+            var viewModel = new ContactViewModel
+            {
+                Email = new Email(),
+                Contact = _context.Contacts.SingleOrDefault(c => c.Id == id)
+            };
+
+            return View(viewModel);
+        }
+
+
+        [HttpPost]
+        public ActionResult SaveNewEmail(ContactViewModel cvm)
+        {
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new ContactViewModel
+                {
+                    Email = cvm.Email,
+                    Contact = _context.Contacts.SingleOrDefault(c => c.Id == cvm.Contact.Id)
+                };
+
+                return View("NewEmail", viewModel);
+            }
+
+            // add email for specific contact to DB
+            cvm.Email.ContactId = cvm.Contact.Id;
+            _context.Email.Add(cvm.Email);
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", "Contact", new { cvm.Contact.Id });
+        }
+
+        public ActionResult DeleteEmail(int contactId, int emailId)
+        {
+            var numberOfEmails = _context.Email.Where(e => e.ContactId == contactId).Count();
+            if (numberOfEmails == 1)
+            {
+                TempData["EmailDeleteErrorMessage"] = "<div style=\"color: red;\" id=\"DeleteErrorMessage\">Can not leave a contact without any email registered.</div>";
+                return RedirectToAction("Details", "Contact", new { id = contactId });
+            }
+
+            var emailToRemove = _context.Email.SingleOrDefault(e => e.Id == emailId);
+            _context.Email.Remove(emailToRemove);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", "Contact", new { id = contactId});
+        }
+
+
+        // phone form to add new phone for a contact
+        public ActionResult NewPhone(int id)
+        {
+            var viewModel = new ContactViewModel
+            {
+                Phone = new Phone(),
+                Contact = _context.Contacts.SingleOrDefault(c => c.Id == id)
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult SaveNewPhone(ContactViewModel cvm)
+        {
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new ContactViewModel
+                {
+                    Phone = new Phone(),
+                    Contact = _context.Contacts.SingleOrDefault(c => c.Id == cvm.Contact.Id)
+                };
+
+                return View("NewPhone", viewModel);
+            }
+
+            cvm.Phone.ContactId = cvm.Contact.Id;
+            _context.Phone.Add(cvm.Phone);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", "Contact", new { cvm.Contact.Id });
+        }
+
+        public ActionResult DeletePhone(int contactId, int phoneId)
+        {
+            var numberOfPhones = _context.Phone.Where(p => p.ContactId == contactId).Count();
+            if (numberOfPhones == 1)
+            {
+                TempData["PhoneDeleteErrorMessage"] = "<div style=\"color: red;\" id=\"DeleteErrorMessage\">Can not leave a contact without any phone number registered.</div>";
+                return RedirectToAction("Details", "Contact", new { id = contactId });
+            }
+
+            var phoneToRemove = _context.Phone.SingleOrDefault(p => p.Id == phoneId);
+            _context.Phone.Remove(phoneToRemove);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", "Contact", new { id = contactId });
+        }
+
+        // address form to add new address for a a contact
+        public ActionResult NewAddress(int id)
+        {
+            var viewModel = new ContactViewModel
+            {
+                Address = new Address(),
+                Contact = _context.Contacts.SingleOrDefault(c => c.Id == id)
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult SaveNewAddress(ContactViewModel cvm)
+        {
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new ContactViewModel
+                {
+                    Address = new Address(),
+                    Contact = _context.Contacts.SingleOrDefault(c => c.Id == cvm.Contact.Id)
+                };
+
+                return View("NewAddress", viewModel);
+            }
+
+            cvm.Address.ContactId = cvm.Contact.Id;
+            _context.Address.Add(cvm.Address);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", "Contact", new { cvm.Contact.Id });
+        }
+
+        public ActionResult DeleteAddress(int contactId, int addressId)
+        {
+            var numberOfAddresses = _context.Address.Where(a => a.ContactId == contactId).Count();
+            if (numberOfAddresses == 1)
+            {
+                TempData["AddressDeleteErrorMessage"] = "<div style=\"color: red;\" id=\"DeleteErrorMessage\">Can not leave a contact without an address registered.</div>";
+                return RedirectToAction("Details", "Contact", new { id = contactId });
+            }
+
+            var addressToRemove = _context.Address.SingleOrDefault(a => a.Id == addressId);
+            _context.Address.Remove(addressToRemove);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", "Contact", new { id = contactId });
+        }
+
+        [HttpPost]
+        public ActionResult UploadCsv(HttpPostedFileBase upload)
+        {
+            if (ModelState.IsValid)
+            {
+                if (upload != null && upload.ContentLength > 0)
+                {
+                    if (upload.FileName.EndsWith(".csv"))
+                    {
+                        Stream stream = upload.InputStream;
+                        DataTable csvTable = new DataTable();
+                        using (CsvReader csvReader = new CsvReader(new StreamReader(stream), true))
+                        {
+                            csvTable.Load(csvReader);
+                        }
+                        foreach (DataRow row in csvTable.Rows)
+                        {
+                            var contactToAdd = new Contact
+                            {
+                                FirstName = row[csvTable.Columns[0]].ToString(),
+                                LastName = row[csvTable.Columns[1]].ToString()
+                            };
+                            var emailToAdd = new Email
+                            {
+                                EmailAddress = row[csvTable.Columns[2]].ToString()
+                            };
+                            var phoneToAdd = new Phone
+                            {
+                                PhoneNumber = row[csvTable.Columns[3]].ToString()
+                            };
+                            var addressToAdd = new Address
+                            {
+                                ContactAddress = row[csvTable.Columns[4]].ToString()
+                            };
+
+                            _context.Contacts.Add(contactToAdd);
+                            _context.Email.Add(emailToAdd);
+                            _context.Phone.Add(phoneToAdd);
+                            _context.Address.Add(addressToAdd);
+
+                            _context.SaveChanges();
+                        }
+                    }
+                }
+            }
+            return RedirectToAction("Contacts", "Book", null);
         }
     }
 }

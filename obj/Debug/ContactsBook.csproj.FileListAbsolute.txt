@@ -287,3 +287,6 @@ C:\Users\Klaidi\source\repos\ContactsBook\obj\Debug\ContactsBook.Migrations.Popu
 C:\Users\Klaidi\source\repos\ContactsBook\obj\Debug\ContactsBook.Migrations.PopulateEmails1000Records.resources
 C:\Users\Klaidi\source\repos\ContactsBook\obj\Debug\ContactsBook.Migrations.PopulatePhones1000Records.resources
 C:\Users\Klaidi\source\repos\ContactsBook\obj\Debug\ContactsBook.Migrations.PopulateAddresses1000Records.resources
+C:\Users\Klaidi\source\repos\ContactsBook\bin\LumenWorks.Framework.IO.dll
+C:\Users\Klaidi\source\repos\ContactsBook\bin\LumenWorks.Framework.IO.pdb
+C:\Users\Klaidi\source\repos\ContactsBook\bin\LumenWorks.Framework.IO.xml
